@@ -32,5 +32,5 @@ jobs:
       - name: Upload Lambda Package
         uses: actions/upload-artifact@v3
         with:
-          name: lambda-package
-          path: lambda-package.zip
+          name: lambda_pg_dump
+          path: lambda_pg_dump.zip
