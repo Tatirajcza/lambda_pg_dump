@@ -20,9 +20,28 @@ jobs:
         with:
           node-version: 16
 
+      # Download PostgreSQL 16.6 binaries for pg_dump
+      - name: Download pg_dump 16.6
+        run: |
+          wget https://ftp.postgresql.org/pub/source/v16.6/postgresql-16.6.tar.gz
+          tar -xvzf postgresql-16.6.tar.gz
+          cd postgresql-16.6
+          ./configure --without-readline --without-zlib
+          make
+          cp src/bin/pg_dump/pg_dump ./bin/
+          cp src/bin/pg_dump/pg_restore ./bin/
+          chmod +x ./bin/pg_dump ./bin/pg_restore
+        working-directory: .
+
       # Install dependencies
       - name: Install Dependencies
         run: npm run build
+
+      # Replace old pg_dump binary
+      - name: Replace old pg_dump
+        run: |
+          mv ./bin/pg_dump /bin/pg_dump
+          mv ./bin/pg_restore /bin/pg_restore
 
       # Zip the Lambda package
       - name: Package Lambda
@@ -34,3 +53,4 @@ jobs:
         with:
           name: lambda_pg_dump
           path: lambda_pg_dump.zip
+
